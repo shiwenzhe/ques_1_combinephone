@@ -56,18 +56,18 @@ int Traversal(node * head,string res, int deep, ofstream &out)
 {
     if(deep == 11)
     {
-        cout << res << '|';
+        //cout << res << '|';
         out << res << '|';
         set<string>::iterator it = head->fset.begin();
-        cout << *it;
+        //cout << *it;
         out << *it;
         it ++;
         for(; it != head->fset.end(); it++)
         {
-            cout << ',' << *it;
+            //cout << ',' << *it;
             out << ',' << *it;
         }
-        cout << endl;
+        //cout << endl;
         out << endl;
         return 0;
     }
@@ -87,22 +87,45 @@ int Traversal(node * head,string res, int deep, ofstream &out)
     }
 }
 
+set<string> ifexist(string line, node * head)
+{
+    int         num;
+    node *      temp = head;
+    node *      last = temp;
+    set<string> tempset;
+    for(int i=0; i < 11; i++)
+    {
+        num = line[i] - '0';
+        if(temp->next[num] == NULL)
+        {
+            return tempset;
+        }
+        else{
+            last = temp;
+            temp = temp->next[num];
+        }
+    }
+    tempset = temp->fset;
+    last->next[num] = NULL;
+    return tempset;
+}
+
 int main()
 {
+
+    fstream phoneallin("phone_all.txt");
+    string ss;
+    while(phoneallin >> ss)
+    {
+        cout << ss << endl;
+    }
+
     string line;
     node * head = new node();
 
     //----------------------------------------
-    //------------构造字典树------------------
+    //-----------new.txt文件构造字典树--------
     //----------------------------------------
-    fstream phonein("phone.txt");
-    while(phonein >> line)
-    {
-        //cout << line << endl;
-        construct(head, line);
-    }
-    phonein.close();
-
     fstream newin("new.txt");
     while(newin >> line)
     {
@@ -111,10 +134,53 @@ int main()
     }
     newin.close();
 
+
+    ofstream phoneallout("phone_all.txt");
+
+    fstream phonein("phone.txt");
+    while(phonein >> line)
+    {
+        set<string> myset = ifexist(line, head); //存在就写入并删除，不存在则直接写入文件
+        if(myset.size() == 0){
+            phoneallout << line << endl;
+            //cout << line << endl;
+        }
+        else{
+
+            int start = 12;
+            int last = line.length();
+            int index = line.find(','); //标记逗号的位置
+            while(index <= last && index >= 0)
+            {
+                myset.insert(line.substr(start, index-start));
+                start = index+1;
+                index = line.find_first_of(',', start);
+            }
+            if(start != last)
+            {
+                myset.insert(line.substr(start, last-start));
+            }
+
+            phoneallout << line.substr(0, 12);
+            //cout << line.substr(0, 12);
+            set<string>::iterator sit = myset.begin();
+            phoneallout << *sit;
+            //cout << *sit;
+            sit ++;
+            while(sit != myset.end())
+            {
+                phoneallout << ',' << *sit;
+                //cout << ',' << *sit;
+                sit ++;
+            }
+            //cout << endl;
+            phoneallout << endl;
+        }
+    }
+
     //----------------------------------------
     //------------遍历字典树------------------
     //----------------------------------------
-    ofstream phoneallout("phone_all.txt");
     Traversal(head, "", 0, phoneallout);
     phoneallout.close();
 
