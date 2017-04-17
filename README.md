@@ -1,4 +1,3 @@
-“<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>”
 # 问题1
 
 手机号的属性标签合并，文件phone.txt有一亿条手机号标签记录，文件new.txt有100万条记录两个文件的手机号合并成一个phone_all.txt文件
@@ -34,4 +33,3 @@ new.txt文件格式：
 如此，最后构建完成的字典树包含了两个文件中所有电话号码的信息，并且可以将重复的电话号码有效地合并，最后采用深度优先搜索的方法遍历改字典树，将遍历结果输出至文件phone_all.txt即可，**算法的时间复杂度是O(n)，其空间复杂度为<img src="http://chart.googleapis.com/chart?cht=tx&chl=O(10^{11})" style="border:none;">**。  
 
 
-$$O(10^{11})$$
