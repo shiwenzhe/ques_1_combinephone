@@ -1,0 +1,122 @@
+#include <iostream>
+#include <fstream>
+#include <set>
+#include <string>
+
+using namespace std;
+
+struct node
+{
+    set<string> fset; //用于存储对应电话的属性特征
+    node * next[10];  //电话号码的每一位都是0-9的数字表示
+    node()            //初始化
+    {
+        for(int i=0; i<10; i++)
+        {
+            next[i] = NULL;
+        }
+    }
+};
+
+//构造字典树
+void construct(node *head, string line)
+{
+    int num;
+    node * temp = head;
+    //前11位肯定是电话号码，所以构造字典树
+    for(int i=0; i<11; i++)
+    {
+        num = line[i] - '0';
+        if(temp->next[num] == NULL)
+        {
+            temp->next[num] = new node();
+        }
+        temp = temp->next[num];
+    }
+
+    //最后一位对应的节点中，存入对应的特征值，set会将重复的特征覆盖，无需关注
+    //line从第12位开始，就是特征值
+    int start = 12;
+    int last = line.length();
+    int index = line.find(','); //标记逗号的位置
+    while(index <= last && index >= 0)
+    {
+        temp->fset.insert(line.substr(start, index-start));
+        start = index+1;
+        index = line.find_first_of(',', start);
+    }
+    if(start != last)
+    {
+        temp->fset.insert(line.substr(start, last-start));
+    }
+}
+
+//遍历整个字典树
+int Traversal(node * head,string res, int deep, ofstream &out)
+{
+    if(deep == 11)
+    {
+        cout << res << '|';
+        out << res << '|';
+        set<string>::iterator it = head->fset.begin();
+        cout << *it;
+        out << *it;
+        it ++;
+        for(; it != head->fset.end(); it++)
+        {
+            cout << ',' << *it;
+            out << ',' << *it;
+        }
+        cout << endl;
+        out << endl;
+        return 0;
+    }
+
+    char c;
+    string str;
+    for(int i=0; i < 10; i++)
+    {
+        c = '0';
+        str = res;
+        if(head->next[i] != NULL)
+        {
+            c += i;
+            str += c;
+            Traversal(head->next[i], str, deep+1, out);
+        }
+    }
+}
+
+int main()
+{
+    string line;
+    node * head = new node();
+
+    //----------------------------------------
+    //------------构造字典树------------------
+    //----------------------------------------
+    fstream phonein("phone.txt");
+    while(phonein >> line)
+    {
+        //cout << line << endl;
+        construct(head, line);
+    }
+    phonein.close();
+
+    fstream newin("new.txt");
+    while(newin >> line)
+    {
+        //cout << line << endl;
+        construct(head, line);
+    }
+    newin.close();
+
+    //----------------------------------------
+    //------------遍历字典树------------------
+    //----------------------------------------
+    ofstream phoneallout("phone_all.txt");
+    Traversal(head, "", 0, phoneallout);
+    phoneallout.close();
+
+    return 0;
+}

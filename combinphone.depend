@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1492088049 source:c:\users\redant\desktop\combinphone\main.cpp
+	<iostream>
+	<fstream>
+	<set>
+	<string>
+
