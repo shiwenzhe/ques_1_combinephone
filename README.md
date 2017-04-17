@@ -1,4 +1,4 @@
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+
 <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 # 问题1
 
@@ -32,7 +32,7 @@ new.txt文件格式：
 1. 重复的电话号码出现时，将会实时更新末尾节点中对应号码的属性，即更新set容器；  
 2. 新的电话号码出现时，会在构件字典树的过程中扩充字典树，从而实现了新的电话号码的保存。  
 
-如此，最后构建完成的字典树包含了两个文件中所有电话号码的信息，并且可以将重复的电话号码有效地合并，最后采用深度优先搜索的方法遍历改字典树，将遍历结果输出至文件phone_all.txt即可，**算法的时间复杂度是O(n)，其空间复杂度为<img src="http://chart.googleapis.com/chart?cht=tx&chl=O(10^{11})" style="border:none;">**。  $O(10^{11})$
-
+如此，最后构建完成的字典树包含了两个文件中所有电话号码的信息，并且可以将重复的电话号码有效地合并，最后采用深度优先搜索的方法遍历改字典树，将遍历结果输出至文件phone_all.txt即可，**算法的时间复杂度是O(n)，其空间复杂度为<img src="http://chart.googleapis.com/chart?cht=tx&chl=O(10^{11})" style="border:none;">**。  
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default">$O(10^{11})$</script>
 
 
