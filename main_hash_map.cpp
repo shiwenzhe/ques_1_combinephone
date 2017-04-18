@@ -31,6 +31,8 @@ int main()
     string      line;
     unordered_map<string, set<string> >    hmap;
 
+    string      ssbuffer = "";//字符缓冲区
+
     //遍历new.txt文件，将其存入has_map
     while(newin >> line)
     {
@@ -57,7 +59,9 @@ int main()
         unordered_map<string, set<string> >::iterator it = hmap.find(phone);
         if(it == hmap.end())
         {
-            phoneout << line << endl;
+            //phoneout << line << endl;
+            ssbuffer += line;
+            ssbuffer += "\n";
         }
         else{
             set<string> flag = phoneflag(line);
@@ -65,20 +69,37 @@ int main()
             {
                 hmap[phone].insert(*setit);
             }
-            phoneout << phone << '|';
+            //phoneout << phone << '|';
+            ssbuffer += phone;
+            ssbuffer += "|";
             //将对应的set中的标签填到后面
             set<string>::iterator setit=hmap[phone].begin();
-            phoneout << *setit;
+            //phoneout << *setit;
+            ssbuffer += phone;
             setit++;
             for(; setit != hmap[phone].end(); setit ++)
             {
-                phoneout << ',' << *setit;
+                //phoneout << ',' << *setit;
+                ssbuffer += ",";
+                ssbuffer += *setit;
             }
-            phoneout << endl;
+            //phoneout << endl;
+            ssbuffer += "\n";
 
             //将已经存在删除
             hmap.erase(hmap.find(phone));
         }
+
+        if(ssbuffer.length() >= 1024)
+        {
+            phoneout << ssbuffer;
+            ssbuffer = "";
+        }
+    }
+    if(ssbuffer.length() != 0)
+    {
+        phoneout << ssbuffer;
+        ssbuffer = "";
     }
     phonein.close();
 
@@ -86,19 +107,38 @@ int main()
     unordered_map<string, set<string> >::iterator unmapit = hmap.begin();
     while(unmapit != hmap.end())
     {
-        phoneout << unmapit->first << "|";
+        //phoneout << unmapit->first << "|";
+        ssbuffer += unmapit->fisrt;
+        ssbuffer += "|";
+
         set<string>::iterator sit = unmapit->second.begin();
         if(unmapit->second.size() != 0)
         {
-            phoneout << *sit ;
+            //phoneout << *sit ;
+            ssbuffer += *sit;
             sit ++;
         }
         for(;sit != unmapit->second.end(); sit ++)
         {
-            phoneout << ',' << *sit ;
+            //phoneout << ',' << *sit ;
+            ssbuffer += ",";
+            ssbuffer += *sit;
         }
-        phoneout << endl;
+        //phoneout << endl;
+        ssbuffer += "\n";
         unmapit ++;
+
+        if(ssbuffer.length() >= 1024)
+        {
+            phoneout << ssbuffer;
+            ssbuffer = "";
+        }
+    }
+
+    if(ssbuffer.length() != 0)
+    {
+        phoneout << ssbuffer;
+        ssbuffer = "";
     }
 
     phoneout.close();
