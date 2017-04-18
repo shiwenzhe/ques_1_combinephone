@@ -2,7 +2,7 @@
 #include <fstream>
 #include <set>
 #include <string>
-#include <ctime>
+//#include <ctime>
 
 using namespace std;
 
@@ -115,9 +115,9 @@ int main()
 {
     string line;
     node * head = new node();
-    clock_t eend, beg;
+    //clock_t eend, beg;
 
-    beg = clock();
+    //beg = clock();
 
     //-----------new.txt文件构造字典树--------
     fstream newin("new.txt");
@@ -171,8 +171,8 @@ int main()
     //------------遍历字典树------------------
     Traversal(head, "", 0, phoneallout);
 
-    eend = clock();
-    cout << "一共用时：" <<(double)(eend - beg)/CLK_TCK << " 秒" << endl;
+    //eend = clock();
+    //cout << "一共用时：" <<(double)(eend - beg)/CLK_TCK << " 秒" << endl;
     phoneallout.close();
 
     return 0;
