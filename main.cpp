@@ -2,6 +2,7 @@
 #include <fstream>
 #include <set>
 #include <string>
+#include <ctime>
 
 using namespace std;
 
@@ -52,7 +53,7 @@ void construct(node *head, string line)
 }
 
 //遍历整个字典树
-int Traversal(node * head,string res, int deep, ofstream &out)
+void Traversal(node * head,string res, int deep, ofstream &out)
 {
     if(deep == 11)
     {
@@ -69,7 +70,7 @@ int Traversal(node * head,string res, int deep, ofstream &out)
         }
         //cout << endl;
         out << endl;
-        return 0;
+        return ;
     }
 
     char c;
@@ -112,24 +113,16 @@ set<string> ifexist(string line, node * head)
 
 int main()
 {
-
-    fstream phoneallin("phone_all.txt");
-    string ss;
-    while(phoneallin >> ss)
-    {
-        cout << ss << endl;
-    }
-
     string line;
     node * head = new node();
+    clock_t eend, beg;
 
-    //----------------------------------------
+    beg = clock();
+
     //-----------new.txt文件构造字典树--------
-    //----------------------------------------
     fstream newin("new.txt");
     while(newin >> line)
     {
-        //cout << line << endl;
         construct(head, line);
     }
     newin.close();
@@ -138,12 +131,13 @@ int main()
     ofstream phoneallout("phone_all.txt");
 
     fstream phonein("phone.txt");
+
     while(phonein >> line)
     {
-        set<string> myset = ifexist(line, head); //存在就写入并删除，不存在则直接写入文件
+        set<string> myset = ifexist(line, head);
+        //存在就写入并删除，不存在则直接写入文件
         if(myset.size() == 0){
             phoneallout << line << endl;
-            //cout << line << endl;
         }
         else{
 
@@ -162,26 +156,23 @@ int main()
             }
 
             phoneallout << line.substr(0, 12);
-            //cout << line.substr(0, 12);
             set<string>::iterator sit = myset.begin();
             phoneallout << *sit;
-            //cout << *sit;
             sit ++;
             while(sit != myset.end())
             {
                 phoneallout << ',' << *sit;
-                //cout << ',' << *sit;
                 sit ++;
             }
-            //cout << endl;
             phoneallout << endl;
         }
     }
 
-    //----------------------------------------
     //------------遍历字典树------------------
-    //----------------------------------------
     Traversal(head, "", 0, phoneallout);
+
+    eend = clock();
+    cout << "一共用时：" <<(double)(eend - beg)/CLK_TCK << " 秒" << endl;
     phoneallout.close();
 
     return 0;
